@@ -10,8 +10,7 @@ esac
 echo ${machine}
 
 if [ "$machine" = "Linux" ]; then
-    find $1/bin $1/.gitignore $1/.git $1/.git/index.lock > files_to_ignore
-    echo "$1/.git/index.lock" >> files_to_ignore
+    find $1/bin $1/.gitignore $1/.git > files_to_ignore
     if hash inotifywait 2>/dev/null; then
         inotifywait -r -m $1 -e create -e moved_to -e modify -e delete --exclude files_to_ignore --exclude $1/.git/index.lock | while read path action file; do
             echo "File '$file' in directory '$path' via '$action'"
