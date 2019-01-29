@@ -10,14 +10,15 @@ esac
 echo ${machine}
 
 if [ "$machine" = "Linux" ]; then
+    find $1/bin $1/.gitignore $1/.git > files_to_ignore
     if hash inotifywait 2>/dev/null; then
-        inotifywait -m $1 -e create -e moved_to -e modify -e delete | 
+        inotifywait -m $1 -e create -e moved_to -e modify -e delete --exclude files_to_ignore | 
             while read path action file; do
                 echo "File '$file' in directory '$path' via '$action'"
             done
     else
         apt install inotify-tools -y
-        inotifywait -m $1 -e create -e moved_to -e modify -e delete | 
+        inotifywait -m $1 -e create -e moved_to -e modify -e delete --exclude files_to_ignore | 
             while read path action file; do
                 echo "File '$file' in directory '$path' via '$action'"
             done
