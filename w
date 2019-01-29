@@ -23,7 +23,15 @@ if [ "$machine" = "Linux" ]; then
             done
     fi
 elif [ "$machine" = "Mac" ]; then
-    fswatch -r -x --event Created --event MovedTo --event Updated --event Removed --exclude .git --exclude bin $1 | while read path action file; do
-        echo "$path $action"
-    done
+    if hash fswatch 2>/dev/null; then
+        fswatch -r -x --event Created --event MovedTo --event Updated --event Removed --exclude .git --exclude bin $1 | while read path action file; do
+            echo "$path $action"
+        done
+    else
+        brew install fswatch
+        fswatch -r -x --event Created --event MovedTo --event Updated --event Removed --exclude .git --exclude bin $1 | while read path action file; do
+            echo "$path $action"
+        done
+    fi
+
 fi
